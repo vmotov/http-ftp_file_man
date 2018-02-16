@@ -4,8 +4,8 @@ services:
     build: ./http
     restart: always
     volumes:
-      - "/home/share/download:/usr/share/fm/files/readonly"
-      - "/home/share/upload:/usr/share/fm/files/writable"
+      - "/srv/share/download:/usr/share/fm/files/readonly"
+      - "/srv/share/upload:/usr/share/fm/files/writable"
     environment:
       - "FM_HEAP_SIZE=1024m"
     ports:
@@ -15,8 +15,8 @@ services:
     build: ./ftp
     restart: always
     volumes:
-      - "/home/share/download:/var/ftp/download"
-      - "/home/share/upload:/var/ftp/upload"
+      - "/srv/share/download:/var/ftp/download"
+      - "/srv/share/upload:/var/ftp/upload"
     ports:
       - "21:21"
       - "50000-51000:50000-51000"
