@@ -1,0 +1,43 @@
+FROM debian:8
+
+MAINTAINER Vitaliy Motov <vitaliy.motov@kcell.kz>
+
+RUN echo "deb http://httpredir.debian.org/debian/ jessie main" >> /etc/apt/sources.list && \
+    echo "deb-src http://httpredir.debian.org/debian/ jessie main" >> /etc/apt/sources.list && \
+    echo "deb-src http://security.debian.org/ jessie/updates main" >> /etc/apt/sources.list && \
+    echo "deb http://httpredir.debian.org/debian/ jessie-updates main" >> /etc/apt/sources.list && \
+    echo "deb-src http://httpredir.debian.org/debian/ jessie-updates main" >> /etc/apt/sources.list && \
+    apt-get -y update && \
+    apt-get -y --force-yes --fix-missing install dpkg-dev
+
+RUN mkdir -p /usr/share/pure-ftpd && \
+    mkdir /tmp/pure-ftpd && \
+    cd /tmp/pure-ftpd && \
+    apt-get source pure-ftpd && \
+    cp -R pure-ftpd-* /usr/share/pure-ftpd && \
+    cd /usr/share/pure-ftpd/pure-ftpd-* && \
+    /usr/share/pure-ftpd/pure-ftpd-*/configure --with-everything && \
+    make && \
+    make install
+
+RUN groupadd --gid 2001 ftp && \
+    adduser --uid 2001 --gid 2001 --home /var/ftp ftp
+
+RUN mkdir -p /var/ftp/download && \
+    chown -R ftp:ftp /var/ftp/ && \
+    chmod -R 0755 /var/ftp/download && \
+    mkdir -p /var/ftp/upload && \
+    chmod -R 0777 /var/ftp/upload
+
+VOLUME /var/ftp/download /var/ftp/upload
+
+WORKDIR /usr/bin
+
+RUN touch /usr/bin/start.sh && \
+    echo "/usr/local/sbin/pure-ftpd -4 -A -M -e -U 022:022 -p 50000:51000" > /usr/bin/start.sh && \
+    chmod a+x /usr/bin/start.sh
+
+
+CMD exec /usr/bin/start.sh
+
+EXPOSE 21 50000-51000

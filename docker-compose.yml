@@ -1,0 +1,22 @@
+version: '2'
+services:
+  http:
+    build: ./http
+    restart: always
+    volumes:
+      - "/home/share/download:/usr/share/fm/files/readonly"
+      - "/home/share/upload:/usr/share/fm/files/writable"
+    environment:
+      - "FM_HEAP_SIZE=1024m"
+    ports:
+      - "80:8080"
+
+  ftp:
+    build: ./ftp
+    restart: always
+    volumes:
+      - "/home/share/download:/var/ftp/download"
+      - "/home/share/upload:/var/ftp/upload"
+    ports:
+      - "21:21"
+      - "50000-51000:50000-51000"
