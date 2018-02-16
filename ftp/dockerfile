@@ -20,8 +20,8 @@ RUN mkdir -p /usr/share/pure-ftpd && \
     make && \
     make install
 
-RUN groupadd --gid 2001 ftp && \
-    adduser --uid 2001 --gid 2001 --home /var/ftp ftp
+RUN groupadd --gid 2000 ftp && \
+    adduser --uid 2000 --gid 2000 --home /var/ftp ftp
 
 RUN mkdir -p /var/ftp/download && \
     chown -R ftp:ftp /var/ftp/ && \
