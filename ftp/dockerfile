@@ -40,4 +40,4 @@ RUN touch /usr/bin/start.sh && \
 
 CMD exec /usr/bin/start.sh
 
-EXPOSE 21 50000-51000
+EXPOSE 21 50000-50100
